@@ -3,6 +3,7 @@
 
 import requests
 import json
+import time
 
 
 class SnipsHue:
@@ -22,7 +23,7 @@ class SnipsHue:
 
     def send_params(self, params):
         p = dict((k, v) for k, v in params.iteritems() if v != None)
-        for light in self.light_ids:
+        for light_id in self.light_ids:
             self.set_light_state(p, light_id)
             time.sleep(0.2)
 
