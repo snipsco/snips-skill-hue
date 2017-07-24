@@ -1,5 +1,5 @@
-#!/usr/bin/env python3
-# encoding: utf-8
+# -*-: coding utf-8 -*-
+""" Philips Hue skill for Snips. """
 
 import requests
 import json
@@ -7,6 +7,7 @@ import time
 
 
 class SnipsHue:
+    """ Philips Hue skill for Snips. """
 
     def __init__(self, hostname, username, light_ids):
         """
@@ -53,8 +54,8 @@ class SnipsHue:
         print("[HUE] Setting state for light " +
               str(light_id) + ": " + str(params))
         try:
-            requests.put("{0}/{1}/state".format(self.endpoint,
-                                                light_id), data=json.dumps(params), headers=None)
+            url = "{}/{}/state".format(self.endpoint, light_id)
+            requests.put(url, data=json.dumps(params), headers=None)
         except:
             print("[HUE] Request timeout. Is the Hue Bridge reachable?")
             pass
