@@ -12,13 +12,13 @@ class SnipsHue:
     def __init__(self, config):
         """
         :param config: Philips Hue configuration dictionary, holding:
-                       - hostname: hostname
-                       - username: username
-                       - light_ids: light ids
+                       - hostname: Philips Hue hostname
+                       - username: Philips Hue username
+                       - light_ids: Philips Hue light ids
         """
         self.endpoint = 'http://{}/api/{}/lights'.format(
-            config.hostname, config.username)
-        self.light_ids = config.light_ids
+            config["hostname"], config["username"])
+        self.light_ids = config["light_ids"]
 
     def turn_on(self):
         """ Turn on all Philips Hue lights. """
