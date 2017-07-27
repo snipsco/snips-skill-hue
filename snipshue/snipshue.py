@@ -9,14 +9,16 @@ import time
 class SnipsHue:
     """ Philips Hue skill for Snips. """
 
-    def __init__(self, hostname, username, light_ids):
+    def __init__(self, config):
         """
-        :param hostname: Philips Hue hostname
-        :param username: Philips Hue username
-        :param light_ids: Philips Hue light ids
+        :param config: Philips Hue configuration dictionary, holding:
+                       - hostname: hostname
+                       - username: username
+                       - light_ids: light ids
         """
-        self.endpoint = 'http://{}/api/{}/lights'.format(hostname, username)
-        self.light_ids = light_ids
+        self.endpoint = 'http://{}/api/{}/lights'.format(
+            config.hostname, config.username)
+        self.light_ids = config.light_ids
 
     def turn_on(self):
         """ Turn on all Philips Hue lights. """
@@ -28,7 +30,7 @@ class SnipsHue:
 
     def set_color_name(self, color):
         """ Set the light color for all lights.
-        
+
         :param color: A color name, e.g. "red" or "blue"
         """
         params = self.get_HSR(color)
@@ -37,7 +39,7 @@ class SnipsHue:
 
     def post_state_all(self, params):
         """ Post a state update to all Philips Hue lights.
-        
+
         :param params: Philips Hue request parameters.
         """
         p = dict((k, v) for k, v in params.iteritems() if v != None)
@@ -47,7 +49,7 @@ class SnipsHue:
 
     def post_state(self, params, light_id):
         """ Post a state update to a given light.
-        
+
         :param params: Philips Hue request parameters.
         :param light_id: Philips Hue light ID.
         """
@@ -63,7 +65,7 @@ class SnipsHue:
     def get_HSR(self, color_name):
         """ Transform a color name into a dictionary represenation
             of a color, as expected by the Philips Hue API.
-        
+
         :param color_name: A color name, e.g. "red" or "blue"
         :return: A dictionary represenation of a color, as expected
             by the Philips Hue API, e.g. {'hue': 65535, 'sat': 254, 'bri': 254}
