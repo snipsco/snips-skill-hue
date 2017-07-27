@@ -9,16 +9,15 @@ import time
 class SnipsHue:
     """ Philips Hue skill for Snips. """
 
-    def __init__(self, config):
+    def __init__(self, hostname, username, light_ids):
         """
-        :param config: Philips Hue configuration dictionary, holding:
-                       - hostname: Philips Hue hostname
-                       - username: Philips Hue username
-                       - light_ids: Philips Hue light ids
+        :param hostname: Philips Hue hostname
+        :param username: Philips Hue username
+        :param light_ids: Philips Hue light ids
         """
         self.endpoint = 'http://{}/api/{}/lights'.format(
-            config["hostname"], config["username"])
-        self.light_ids = config["light_ids"]
+            hostname, username)
+        self.light_ids = light_ids
 
     def turn_on(self):
         """ Turn on all Philips Hue lights. """
