@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='snipshue',
-    version='0.1.2',
+    version='0.1.3',
     description='Philips Hue skill for Snips',
     author='Michael Fester',
     author_email='michael.fester@gmail.com',
@@ -12,6 +12,10 @@ setup(
     install_requires=['requests==2.6.0'],
     test_suite="tests",
     keywords=['snips'],
+    include_package_data=True,
+    package_data={
+        'snipshue': ['Snipsspec'],
+    },
     packages=[
         'snipshue'
     ]
