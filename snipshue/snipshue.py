@@ -41,7 +41,7 @@ class SnipsHue:
 
         :param params: Philips Hue request parameters.
         """
-        p = dict((k, v) for k, v in params.iteritems() if v != None)
+        p = dict((k, v) for k, v in params.items() if v != None)
         for light_id in self.light_ids:
             self.post_state(p, light_id)
             time.sleep(0.2)
