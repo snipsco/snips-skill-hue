@@ -1,5 +1,7 @@
 package_name: snipshue
 class_name: SnipsHue
+description: Philips Hue skill for Snips
+parameters: ["hostname", "username", "light_ids"]
 intents:
   - intent: DeactivateObject
     action: "turn_off"
