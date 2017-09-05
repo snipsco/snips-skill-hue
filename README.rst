@@ -13,6 +13,28 @@ The skill is on `PyPI`_, so you can just install it with `pip`_:
 
     $ pip install snipshue
 
+Snips Skills Manager
+^^^^^^^^^^^^^^^^^^^^
+
+It is recommended that you use this skill with the `Snips Skills Manager <https://github.com/snipsco/snipsskills>`_. Simply add the following section to your `Snipsfile <https://github.com/snipsco/snipsskills/wiki/The-Snipsfile>`_:
+
+.. code-block:: yaml
+
+    skills:
+      - package_name: snipshue
+        class_name: SnipsHue
+        pip: snipshue=
+        params:
+          hostname: PHILIPS_HUE_IP
+          username: PHILIPS_HUE_USERNAME
+          light_ids: [1, 2, 3, 4, 5, 6]
+        intents:
+          - intent: DeactivateObject
+            action: "turn_off"
+          - intent: ActivateLightColor
+            action: "turn_on"
+      
+
 Usage
 -----
 
