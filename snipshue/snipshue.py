@@ -4,6 +4,7 @@
 import requests
 import json
 import time
+import os
 
 
 class SnipsHue:
@@ -17,7 +18,7 @@ class SnipsHue:
         """
         self.endpoint = 'http://{}/api/{}/lights'.format(
             hostname, username)
-        self.light_ids = light_ids
+        self.light_ids = light_ids        
 
     def turn_on(self):
         """ Turn on all Philips Hue lights. """
