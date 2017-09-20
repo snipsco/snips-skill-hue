@@ -15,5 +15,4 @@ setup(
     packages=['snipshue'],
     package_data={'snipshue': ['Snipsspec']},
     include_package_data=True,
-
 )
