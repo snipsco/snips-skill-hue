@@ -3,13 +3,23 @@ class_name: SnipsHue
 description: Philips Hue skill for Snips
 parameters: ["hostname", "username", "light_ids"]
 intents:
-  - intent: DeactivateObject
-    action: "turn_off"
-  - intent: ActivateLightColor
+  - intent: lightsTurnOff_EN
     action: >
       {%
-      if intent.objectColor != None:
-        skill.set_color_name(intent.objectColor)
-      else:
-        skill.turn_on()
+      skill.light_off(intent.house_room_EN)
+      %}
+  - intent: lightsTurnOnSet_EN
+    action: >
+      {%
+      skill.light_on_set("white", intent.number, intent.house_room_EN)
+      %}
+  - intent: lightsTurnDown_EN
+    action: >
+      {%
+      skill.light_down(intent.house_room_EN)
+      %}
+  - intent: lightsTurnUp_EN
+    action: >
+      {%
+      skill.light_up(intent.house_room_EN)
       %}
