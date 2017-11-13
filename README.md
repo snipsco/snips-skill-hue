@@ -26,7 +26,6 @@ skills:
     params:
       hostname: PHILIPS_HUE_IP
       username: PHILIPS_HUE_USERNAME
-      light_ids: [1, 2, 3, 4, 5, 6]
     intents:
       - intent: DeactivateObject
         action: "turn_off"
@@ -41,9 +40,13 @@ The skill allows you to control [Philips Hue](http://www2.meethue.com/) lights. 
 ```python
 from snipshue.snipshue import SnipsHue
 
-hue = SnipsHue(hostname, username, light_ids) 
+hue = SnipsHue() 
 hue.turn_on()
 ```
+
+## Contributing
+
+Please see the [Contribution Guidelines](https://github.com/snipsco/snips-skill-hue/blob/master/CONTRIBUTING.rst).
 
 ## Copyright
 

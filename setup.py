@@ -9,7 +9,13 @@ setup(
     url='https://github.com/snipsco/snips-skill-hue',
     download_url='',
     license='MIT',
-    install_requires=['requests==2.6.0'],
+    install_requires=[
+        'requests==2.6.0'
+        'funcsigs==1.0.2',
+        'mock==2.0.0',
+        'pbr==3.1.1',
+        'six==1.11.0'
+    ],
     test_suite="tests",
     keywords=['snips'],
     packages=['snipshue'],
