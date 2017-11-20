@@ -10,7 +10,7 @@ setup(
     download_url='',
     license='MIT',
     install_requires=[
-        'requests==2.6.0'
+        'requests==2.6.0',
         'funcsigs==1.0.2',
         'mock==2.0.0',
         'pbr==3.1.1',
