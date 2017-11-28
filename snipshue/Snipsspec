@@ -11,15 +11,15 @@ intents:
   - intent: lightsTurnOnSet
     action: >
       {%
-      skill.light_on_set("white", intent.number, intent.house_room)
+      skill.light_on_set(None, intent.number, intent.house_room)
       %}
   - intent: lightsTurnDown
     action: >
       {%
-      skill.light_down(intent.house_room)
+      skill.light_down(20, intent.house_room)
       %}
   - intent: lightsTurnUp
     action: >
       {%
-      skill.light_up(intent.house_room)
+      skill.light_up(20, intent.house_room)
       %}

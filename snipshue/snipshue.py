@@ -16,7 +16,7 @@ class SnipsHue:
 
     colormap = colors
 
-    def __init__(self, hostname=None, username=None):
+    def __init__(self, hostname=None, username=None, locale=None):
         """ Initialisation.
 
         :param hostname: Philips Hue hostname
@@ -37,13 +37,14 @@ class SnipsHue:
 
         self.lights_from_room = self._get_rooms_lights()
 
-    def light_on_set(self, color, intensity, location):
+    def light_on_set(self, color=None, intensity=None, location=None):
         """ Turn on Philips Hue lights in [location] at [intensity] with [color] color. """
 
         light_ids = self._get_light_ids_from_room(location)
 
         state = {"on": True}
         if intensity != None:
+            intensity = int(intensity)
             state.update({"bri": intensity})
         if color != None:
             state.update(self._get_hue_saturation(color))
@@ -52,6 +53,7 @@ class SnipsHue:
 
     def light_off(self, location):
         """ Turn off all Philips Hue lights. """
+
         self._post_state_to_ids({"on": False}, self._get_light_ids_from_room(location))
 
     def light_up(self, intensity_augmentation, location):
@@ -135,6 +137,9 @@ class SnipsHue:
 
     def _get_light_ids_from_room(self, room):
         """ Returns the list of lights in a [room] or all light_ids if [room] is None """
+
+	if room is not None:
+	    room = room.lower()
         if (room == None or self.lights_from_room.get(room) == None):
             return self._get_all_lights()
 
@@ -147,8 +152,8 @@ class SnipsHue:
 
         for key, value in groups.iteritems():
             group = value
-            if group.get("class") != None:
-                ids_from_room[group["class"]] = [ str(x) for x in group["lights"] ]
+            if group.get("class") is not None:
+                ids_from_room[str.lower(str(group["class"]))] = [ str(x) for x in group["lights"] ]
 
         print "[HUE] Available rooms: \n" + ("\n".join(ids_from_room.keys()))
 
@@ -158,5 +163,8 @@ class SnipsHue:
 if __name__ == "__main__":
     sh = SnipsHue()
     # sh.light_on_set("gold", 42, "Bedroom")
-    sh.light_on_set("red", 42, "Office")
+    # sh.light_on_set("gold", 42, "Office")
+    sh.light_on_set("gold", 250, "Bedroom")
+    # sh.light_on_set("red", 150)
+    # sh.light_on_set(None, 200)
     print sh._get_all_lights()
