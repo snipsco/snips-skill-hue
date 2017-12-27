@@ -4,22 +4,22 @@ description: Philips Hue skill for Snips
 parameters: ["hostname", "username"]
 intents:
   - intent: lightsTurnOff
-    action: >
+    action: |
       {%
-      skill.light_off(intent.house_room)
+      snips.skill.light_off(snips.intent.house_room)
       %}
   - intent: lightsTurnOnSet
-    action: >
+    action: |
       {%
-      skill.light_on_set(None, intent.number, intent.house_room)
+      snips.skill.light_on_set(None, snips.intent.number, snips.intent.house_room)
       %}
   - intent: lightsTurnDown
-    action: >
+    action: |
       {%
-      skill.light_down(20, intent.house_room)
+      snips.skill.light_down(20, snips.intent.house_room)
       %}
   - intent: lightsTurnUp
-    action: >
+    action: |
       {%
-      skill.light_up(20, intent.house_room)
+      snips.skill.light_up(20, snips.intent.house_room)
       %}

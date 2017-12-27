@@ -174,3 +174,4 @@ class SnipsHueGetRequests(TestCase):
 class SnipsHuePostRequests(TestCase):
     def tearDown(self):
         pass
+

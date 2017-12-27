@@ -18,7 +18,7 @@ setup(
     ],
     test_suite="tests",
     keywords=['snips'],
-    packages=['snipshue'],
     package_data={'snipshue': ['Snipsspec']},
-    include_package_data=True,
+    packages=['snipshue'],
+    include_package_data=True
 )
