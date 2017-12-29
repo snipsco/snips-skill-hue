@@ -6,20 +6,48 @@ intents:
   - intent: lightsTurnOff
     action: |
       {%
-      snips.skill.light_off(snips.intent.house_room)
+      print snips.intent.house_room
+
+      if snips.intent.house_room is None:
+        snips.skill.light_off(None)
+
+      for room in snips.intent.house_room:
+        snips.skill.light_off(room)
       %}
   - intent: lightsTurnOnSet
     action: |
       {%
-      snips.skill.light_on_set(None, snips.intent.number, snips.intent.house_room)
+      number = None
+      print snips.intent.house_room
+      print snips.intent.number
+
+      if snips.intent.number is not None:
+        number = snips.intent.number[0]
+      if snips.intent.house_room is None:
+        snips.skill.light_on_set(None, number, None)
+
+      for room in snips.intent.house_room:
+        snips.skill.light_on_set(None, number, room)
       %}
   - intent: lightsTurnDown
     action: |
       {%
-      snips.skill.light_down(20, snips.intent.house_room)
+      print snips.intent.house_room
+
+      if snips.intent.house_room is None:
+        snips.skill.light_down(20, None)
+
+      for room in snips.intent.house_room:
+        snips.skill.light_down(20, room)
       %}
   - intent: lightsTurnUp
     action: |
       {%
-      snips.skill.light_up(20, snips.intent.house_room)
+      print snips.intent.house_room
+
+      if snips.intent.house_room is None:
+        snips.skill.light_up(20, None)
+
+      for room in snips.intent.house_room:
+        snips.skill.light_up(20, room)
       %}

@@ -11,6 +11,7 @@ import hue_setup
 
 from color_utils import colors
 
+
 class SnipsHue:
     """ Philips Hue skill for Snips. """
 
@@ -138,9 +139,9 @@ class SnipsHue:
     def _get_light_ids_from_room(self, room):
         """ Returns the list of lights in a [room] or all light_ids if [room] is None """
 
-	if room is not None:
-	    room = room.lower()
-        if (room == None or self.lights_from_room.get(room) == None):
+        if room is not None:
+            room = room.lower()
+        if room is None or self.lights_from_room.get(room) is None:
             return self._get_all_lights()
 
         return self.lights_from_room[room]
@@ -153,7 +154,7 @@ class SnipsHue:
         for key, value in groups.iteritems():
             group = value
             if group.get("class") is not None:
-                ids_from_room[str.lower(str(group["class"]))] = [ str(x) for x in group["lights"] ]
+                ids_from_room[str.lower(str(group["class"]))] = [str(x) for x in group["lights"]]
 
         print "[HUE] Available rooms: \n" + ("\n".join(ids_from_room.keys()))
 
