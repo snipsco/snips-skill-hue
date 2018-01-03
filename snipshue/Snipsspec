@@ -6,20 +6,34 @@ intents:
   - intent: lightsTurnOff
     action: |
       {%
-      snips.skill.light_off(snips.intent.house_room)
+      if len(snips.intent.house_room) > 0:
+        house_room = snips.intent.house_room[0]
+
+        snips.skill.light_off(house_room)
       %}
   - intent: lightsTurnOnSet
     action: |
       {%
-      snips.skill.light_on_set(None, snips.intent.number, snips.intent.house_room)
+      if len(snips.intent.house_room) > 0 and len(snips.intent.number) > 0:
+        number = snips.intent.number[0]
+        house_room = snips.intent.house_room[0]
+
+        snips.skill.light_on_set(None, number, house_room)
       %}
   - intent: lightsTurnDown
     action: |
       {%
-      snips.skill.light_down(20, snips.intent.house_room)
+
+      if len(snips.intent.house_room) > 0:
+        house_room = snips.intent.house_room[0]
+
+        snips.skill.light_down(20, house_room)
       %}
   - intent: lightsTurnUp
     action: |
       {%
-      snips.skill.light_up(20, snips.intent.house_room)
+      if len(snips.intent.house_room) > 0:
+        house_room = snips.intent.house_room[0]
+
+        snips.skill.light_up(20, snips.intent.house_room)
       %}
