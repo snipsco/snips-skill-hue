@@ -85,7 +85,7 @@ class SnipsHue:
             self._post_state({"bri": intensity}, light_id)
 
     def _post_state_to_ids(self, params, light_ids):
-        """ Post a state update to specyfied Philips Hue lights. """
+        """ Post a state update to specified Philips Hue lights. """
         try:
             for light_id in light_ids:
                 self._post_state(params, light_id)
