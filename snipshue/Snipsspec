@@ -6,8 +6,11 @@ intents:
   - intent: lightsTurnOff
     action: |
       {%
-      house_room = snips.intent.house_room if snips.intent.house_room else None
-      snips.skill.light_off(house_room)
+      if snips.intent.house_room:
+        for room in snips.intent.house_room:
+            snips.skill.light_off(room)
+      else:
+        snips.skill.light_off(None)
       %}
   - intent: lightsTurnOnSet
     action: |
