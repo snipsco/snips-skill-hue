@@ -3,6 +3,7 @@ import json
 import os
 import errno
 import sys
+from leds_service import LedsService
 
 cache_file_name = 'credentials.json'
 path_cache_folder = os.path.expanduser('~/.snips/philips_hue/')
@@ -26,6 +27,7 @@ class HueSetup:
         self._set_cache(bridge_ip, username)
 
     def _get_bridge_ip(self):
+
         response = requests.get('http://www.meethue.com/api/nupnp').json()
         bridge_ip = response[0]["internalipaddress"] if type(response) is list else response["internalipaddress"]
 
@@ -90,10 +92,13 @@ class HueSetup:
 
     def _connect_user(self, bridge_ip):
         created = False
+        led_service = LedsService()
 
         print '/!\ Please, press the button on the Hue bridge'
 
+
         while not created:
+            led_service.start_animation(led_service.State.waiting_to_connect)
             payload = json.dumps({'devicetype': 'snipshue'})
             # response = requests.Post(resource)['resource']
             response = requests.post("http://" + bridge_ip + "/api", data=payload).json()

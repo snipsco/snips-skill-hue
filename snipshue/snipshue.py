@@ -40,17 +40,22 @@ class SnipsHue:
 
     def light_on_set(self, color=None, intensity=None, location=None):
         """ Turn on Philips Hue lights in [location] at [intensity] with [color] color. """
+        print "on set."
 
         light_ids = self._get_light_ids_from_room(location)
 
         state = {"on": True}
+        print "on set.."
+
         if intensity != None:
             intensity = int(intensity)
             state.update({"bri": intensity})
         if color != None:
             state.update(self._get_hue_saturation(color))
 
+        print "on set.."
         self._post_state_to_ids(state, light_ids)
+        print "on set.."
 
     def light_off(self, location):
         """ Turn off all Philips Hue lights. """
