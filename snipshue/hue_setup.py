@@ -41,6 +41,8 @@ class HueSetup:
         if 'lights' in response:
             print 'Connected to the Hub'
             is_connected = True
+        elif not response:
+            print 'Hub didn\'t respond'
         elif 'error' in response[0]:
             error = response[0]['error']
             if error['type'] == 1:
@@ -95,7 +97,6 @@ class HueSetup:
         led_service = LedsService()
 
         print '/!\ Please, press the button on the Hue bridge'
-
 
         while not created:
             led_service.start_animation(led_service.State.waiting_to_connect)

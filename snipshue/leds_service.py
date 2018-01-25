@@ -8,7 +8,6 @@ import random
 
 from usb.core import USBError
 
-from singleton import Singleton
 from usb_utils import USB
 
 try:
@@ -18,39 +17,10 @@ except USBError:
           "You may need to replug your microphone and restart your device.")
 
 
-class LedsService:
-    """ Leds service for handling visual feedback for various states of
-        the system. """
-
+class ReSpeakerAnimator(object):
     class State:
         """ Leds states.- """
-        none, waking_up, standby, listening, loading, notify, error, waiting_to_connect = range(8)
-
-    def __init__(self):
-        led_device = USB.get_boards()
-        if led_device == USB.Device.respeaker:
-            self.animator = ReSpeakerAnimator()
-        else:
-            self.animator = None
-
-    def start_animation(self, animation_id):
-        if not self.animator:
-            return
-        animation = self.get_animation(animation_id)
-
-        self.animator.run(animation)
-
-    def get_animation(self, animation):
-        return Animation(animation)
-
-
-class Animation(Singleton):
-
-    def __init__(self, active=0):
-        self.active = active
-
-
-class ReSpeakerAnimator(object):
+        waiting_to_connect = range(1)
 
     def __init__(self):
         self.hid = usb_hid.get()
@@ -66,7 +36,7 @@ class ReSpeakerAnimator(object):
         for frame in range(0, N):
             state = {}
             for led_index in range(0, N):
-                color = int("%02x%02x%02x" % (0, value(led_index, frame), 0), 16)
+                color = self.color_to_int((value(led_index, frame) + 255) % 256, value(led_index, frame), 0)
                 state.update({led_index + 3 : color})
             self.animation_waiting_to_connect.append(state)
 
@@ -104,6 +74,9 @@ class ReSpeakerAnimator(object):
                     return data[4:(4 + length)]
 
     @staticmethod
+    def color_to_int(r, g, b):
+        return (r << 16) | (g << 8) | b
+    @staticmethod
     def to_bytearray(data):
         if type(data) is int:
             array = bytearray([data & 0xFF])
@@ -119,14 +92,19 @@ class ReSpeakerAnimator(object):
         return array
 
     def run(self, animation):
-        if animation.active == LedsService.State.waiting_to_connect:
+        if animation == self.State.waiting_to_connect:
             for item in self.animation_waiting_to_connect:
                 for k, v in item.items():
                     self.write(k, v)
                 time.sleep(0.1)
 
 if __name__ == "__main__":
-    led_service = LedsService()
+    led_service = ReSpeakerAnimator()
+    led_device = USB.get_boards()
+    # if led_device == USB.Device.respeaker:
+    #     animator = ReSpeakerAnimator()
+    # else:
+    #     animator = None
     while True:
-        led_service.start_animation(led_service.State.waiting_to_connect)
+        led_service.run(led_service.State.waiting_to_connect)
         time.sleep(0.8)
