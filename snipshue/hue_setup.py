@@ -25,6 +25,17 @@ class HueSetup:
 
         self._set_cache(bridge_ip, username)
 
+    def _say(self, text):
+        import json
+        import paho.mqtt.publish as publish
+        action = {
+                "type": "notification",
+                "text": text
+                }
+        payload = {"init": action}
+        payload = json.dumps(payload)
+        publish.single("hermes/dialogueManager/startSession", payload, hostname="localhost")
+    
     def _get_bridge_ip(self):
         response = requests.get('http://www.meethue.com/api/nupnp').json()
         bridge_ip = response[0]["internalipaddress"] if type(response) is list else response["internalipaddress"]
@@ -38,7 +49,11 @@ class HueSetup:
 
         if 'lights' in response:
             print 'Connected to the Hub'
+            self._say('Connected to the Hub')
             is_connected = True
+        elif not response:
+            print 'Hub didn\'t respond'
+            self._say('Hub didn\'t respond')
         elif 'error' in response[0]:
             error = response[0]['error']
             if error['type'] == 1:
@@ -87,12 +102,13 @@ class HueSetup:
         content = json.dumps(content)
         f.write(content)
         f.close()
-
+    
+    
     def _connect_user(self, bridge_ip):
         created = False
 
         print '/!\ Please, press the button on the Hue bridge'
-
+        self._say("Please, press the button on the Hue bridge")
         while not created:
             payload = json.dumps({'devicetype': 'snipshue'})
             # response = requests.Post(resource)['resource']
@@ -106,7 +122,7 @@ class HueSetup:
                 created = True
 
         print 'User connected'
-
+        self._say('User connected')
         return (username)
 
 
