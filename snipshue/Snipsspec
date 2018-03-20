@@ -43,3 +43,11 @@ intents:
       else:
         snips.skill.light_up(20, None)
       %}
+  - intent: lightsSetColor
+    action: |
+      {%
+      if len(snips.intent.color):
+        snips.skill.light_on_set(snips.intent.color[0], None, None)
+      else:
+        snips.skill.light_up(20, None)
+      %}

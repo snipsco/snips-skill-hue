@@ -46,6 +46,7 @@ class SnipsHue:
         state = {"on": True}
         if intensity != None:
             intensity = int(intensity)
+            intensity = int(float(intensity) * 2.54)
             state.update({"bri": intensity})
         if color != None:
             state.update(self._get_hue_saturation(color))
@@ -65,7 +66,8 @@ class SnipsHue:
 
         for light_id in light_ids:
             intensity = lights_config[light_id]["bri"]
-            if intensity + intensity_augmentation > 254:
+            intensity = int(float(intensity) * 2.54)
+            if intensity + intensity_augmentation > 100:
                 intensity = 254
             else:
                 intensity += intensity_augmentation
@@ -79,6 +81,7 @@ class SnipsHue:
 
         for light_id in light_ids:
             intensity = lights_config[light_id]["bri"]
+            intensity = int(float(intensity) * 2.54)
             if intensity < intensity_reduction:
                 intensity = 0
             else:
