@@ -1,7 +1,7 @@
 # Philips Hue skill for Snips
 
 [![Build Status](https://travis-ci.org/snipsco/snips-skill-hue.svg)](https://travis-ci.org/snipsco/snips-skill-hue)
-[![PyPi](https://img.shields.io/pypi/v/snipshue.svg)](https://img.shields.io/pypi/v/snipshue.svg)
+[![PyPi](https://img.shields.io/pypi/v/snipshue.svg)](https://pypi.python.org/pypi/snipshue)
 [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/snipsco/snips-skill-hue/master/LICENSE.txt)
 
 ## Installation
