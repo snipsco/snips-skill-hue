@@ -46,7 +46,7 @@ hue.turn_on()
 
 ## Contributing
 
-Please see the [Contribution Guidelines](https://github.com/snipsco/snips-skill-hue/blob/master/CONTRIBUTING.rst).
+Please see the [Contribution Guidelines](https://github.com/snipsco/snips-skill-hue/blob/master/CONTRIBUTING.md).
 
 ## Copyright
 
