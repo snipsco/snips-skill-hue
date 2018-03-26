@@ -24,10 +24,16 @@ class SnipsHue:
         :param username: Philips Hue username
         :param light_ids: Philips Hue light ids
         """
+        self.lights_endpoint = None
+        self.groups_endpoint = None
+        self.config_endpoint = None
+        self.lights_from_room = None
+
         if hostname is None or username is None:
             setup = hue_setup.HueSetup()
             url = setup.bridge_url
-
+            if (url is None):
+                return
             print str(url)
         else:
             url = 'http://{}/api/{}'.format(hostname, username)
@@ -136,6 +142,8 @@ class SnipsHue:
         return lights
 
     def _get_all_lights(self):
+        if (self.lights_endpoint is None):
+            return None
         lights = requests.get(self.lights_endpoint).json()
         return lights.keys()
 
@@ -144,9 +152,10 @@ class SnipsHue:
 
         if room is not None:
             room = room.lower()
-        if room is None or self.lights_from_room.get(room) is None:
+        if self.lights_from_room is None:
+            return None
+        if self.lights_from_room.get(room) is None:
             return self._get_all_lights()
-
         return self.lights_from_room[room]
 
     def _get_rooms_lights(self):

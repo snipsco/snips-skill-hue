@@ -13,7 +13,10 @@ class HueSetup:
     bridge_url = None
 
     def __init__(self):
+        self.bridge_url = None
         bridge_ip = self._get_bridge_ip()
+        if(bridge_ip is None):
+            return
         username = self._get_cached_username(bridge_ip)
 
         print "Cached username: " + str(username)
@@ -37,9 +40,15 @@ class HueSetup:
         publish.single("hermes/dialogueManager/startSession", payload, hostname="localhost")
     
     def _get_bridge_ip(self):
-        response = requests.get('http://www.meethue.com/api/nupnp').json()
-        bridge_ip = response[0]["internalipaddress"] if type(response) is list else response["internalipaddress"]
-
+        try:
+            response = requests.get('http://www.meethue.com/api/nupnp').json()
+        except:
+            return None
+        if(response is not None and len(response)):
+            bridge_ip = response[0]["internalipaddress"] if type(response) is list else response["internalipaddress"]
+        else:
+            print("no bridge detected")
+            return None
         return bridge_ip
 
     def _is_connected(self, bridge_ip, username):
