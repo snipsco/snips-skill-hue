@@ -6,6 +6,7 @@ intents:
   - intent: lightsTurnOff
     action: |
       {%
+      snips.dialogue.end_session(None)
       if len(snips.intent.house_room):
         for room in snips.intent.house_room:
             snips.skill.light_off(room)
@@ -15,6 +16,7 @@ intents:
   - intent: lightsTurnOnSet
     action: |
       {%
+      snips.dialogue.end_session(None)
       number = snips.intent.number[0] if snips.intent.number else None
 
       if len(snips.intent.house_room):
@@ -22,12 +24,11 @@ intents:
           snips.skill.light_on_set(None, number, room)
       else:
         snips.skill.light_on_set(None, number, None)
-
-
       %}
   - intent: lightsTurnDown
     action: |
       {%
+      snips.dialogue.end_session(None)
       if len(snips.intent.house_room):
         for room in snips.intent.house_room:
           snips.skill.light_down(20, room)
@@ -37,6 +38,7 @@ intents:
   - intent: lightsTurnUp
     action: |
       {%
+      snips.dialogue.end_session(None)
       if len(snips.intent.house_room):
         for room in snips.intent.house_room:
           snips.skill.light_up(20, room)
@@ -46,6 +48,7 @@ intents:
   - intent: lightsSetColor
     action: |
       {%
+      snips.dialogue.end_session(None)
       if len(snips.intent.color):
         snips.skill.light_on_set(snips.intent.color[0], None, None)
       else:
