@@ -13,8 +13,14 @@ class HueSetup:
     bridge_url = None
 
     def __init__(self):
-        bridge_ip = self._get_bridge_ip()
-        username = self._get_cached_username(bridge_ip)
+        print "init...: "
+        bridge_ips = self._get_bridge_ips()
+
+        username = None
+        for bridge_ip in bridge_ips:
+            username = self._get_cached_username(bridge_ip)
+            if username is not None:
+                break
 
         print "Cached username: " + str(username)
 
@@ -25,11 +31,15 @@ class HueSetup:
 
         self._set_cache(bridge_ip, username)
 
-    def _get_bridge_ip(self):
+    def _get_bridge_ips(self):
         response = requests.get('http://www.meethue.com/api/nupnp').json()
-        bridge_ip = response[0]["internalipaddress"] if type(response) is list else response["internalipaddress"]
+        bridge_ips = []
+        for ip in response:
+            bridge_ips.append(ip["internalipaddress"])
 
-        return bridge_ip
+        print "bridge ips {}".format(bridge_ips)
+
+        return bridge_ips
 
     def _is_connected(self, bridge_ip, username):
         is_connected = False
@@ -48,6 +58,7 @@ class HueSetup:
 
     def _get_cached_username(self, bridge_ip):
         username = None
+        print "path to cache: {}{}".format(path_cache_folder, cache_file_name)
         try:
             f = open(path_cache_folder + cache_file_name, 'rw')
 
@@ -112,3 +123,5 @@ class HueSetup:
 
     def _create_url(self, bridge_ip, username):
         return 'http://{}/api/{}'.format(bridge_ip, username)
+
+HueSetup()
