@@ -4,11 +4,7 @@
 import requests
 import json
 import time
-import os
-import errno
-import sys
-import hue_setup
-
+from hue_setup import HueSetup
 from color_utils import colors
 
 
@@ -25,7 +21,8 @@ class SnipsHue:
         :param light_ids: Philips Hue light ids
         """
         if hostname is None or username is None:
-            setup = hue_setup.HueSetup()
+            setup = HueSetup()
+            print(setup.bridge_url)
             url = setup.bridge_url
 
             print str(url)
