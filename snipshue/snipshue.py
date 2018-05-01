@@ -156,13 +156,3 @@ class SnipsHue:
         print "[HUE] Available rooms: \n" + ("\n".join(ids_from_room.keys()))
 
         return ids_from_room
-
-
-if __name__ == "__main__":
-    sh = SnipsHue()
-    # sh.light_on_set("gold", 42, "Bedroom")
-    # sh.light_on_set("gold", 42, "Office")
-    sh.light_on_set("gold", 250, "Bedroom")
-    # sh.light_on_set("red", 150)
-    # sh.light_on_set(None, 200)
-    print sh._get_all_lights()
