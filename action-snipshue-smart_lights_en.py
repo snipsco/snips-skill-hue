@@ -8,7 +8,7 @@ from snipshelpers.config_parser import SnipsConfigParser
 import Queue
 
 CONFIGURATION_ENCODING_FORMAT = "utf-8"
-CONFIG_INI = "conf.ini"
+CONFIG_INI = "config.ini"
 
 MQTT_IP_ADDR = "localhost"
 MQTT_PORT = 1883
@@ -18,7 +18,7 @@ MQTT_ADDR = "{}:{}".format(MQTT_IP_ADDR, str(MQTT_PORT))
 class Skill:
 
     def __init__(self):
-        config = SnipsConfigParser.read_configuration_file('conf.ini')
+        config = SnipsConfigParser.read_configuration_file(CONFIG_INI)
 
         hostname = None
         code = None
