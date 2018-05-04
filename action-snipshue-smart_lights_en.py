@@ -54,12 +54,8 @@ class Skill:
         rooms = self.extract_house_rooms(intent_message)
         if intent_message.intent.intent_name == 'lightsTurnOff':
             self.queue.put(self.lights_turn_off(hermes, intent_message, rooms))
-        if intent_message.intent.intent_name == 'lightsTurnOnSet':
+        if intent_message.intent.intent_name == 'lightsSet':
             self.queue.put(self.lights_turn_on_set(hermes, intent_message, rooms))
-        if intent_message.intent.intent_name == 'lightsTurnDown':
-            self.queue.put(self.lights_turn_down(hermes, intent_message, rooms))
-        if intent_message.intent.intent_name == 'lightsTurnUp':
-            self.queue.put(self.lights_turn_up(hermes, intent_message, rooms))
 
     def lights_turn_off(self, hermes, intent_message, rooms):
         if len(rooms) > 0:
@@ -98,6 +94,10 @@ class Skill:
             self.snipshue.light_up(20, None)
 
         hermes.publish_end_session(intent_message.session_id, None)
+
+
+
+                
 
 
 if __name__ == "__main__":
