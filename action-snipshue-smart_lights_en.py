@@ -10,7 +10,7 @@ import Queue
 CONFIGURATION_ENCODING_FORMAT = "utf-8"
 CONFIG_INI = "config.ini"
 
-MQTT_IP_ADDR = "localhost"
+MQTT_IP_ADDR = "raspi-testskills.local"
 MQTT_PORT = 1883
 MQTT_ADDR = "{}:{}".format(MQTT_IP_ADDR, str(MQTT_PORT))
 
@@ -76,7 +76,7 @@ class Skill:
         hermes.publish_end_session(intent_message.session_id, None)
 
     def lights_turn_on_set(self, hermes, intent_message, rooms):
-        number = intent_message.slots.number.first().value.value if intent_message.slots.number else None
+        number = intent_message.slots.number.first().value if intent_message.slots.number else None
 
         if len(rooms) > 0:
             for room in rooms:
