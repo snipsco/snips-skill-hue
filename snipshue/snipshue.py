@@ -22,7 +22,7 @@ class SnipsHue:
 
         :param hostname: Philips Hue hostname
         :param username: Philips Hue username
-        :param light_ids: Philips Hue light ids
+        :param locale: Locale for the assistant language
         """
         self.lights_endpoint = None
         self.groups_endpoint = None
@@ -30,9 +30,12 @@ class SnipsHue:
         self.lights_from_room = None
 
         if hostname is None or username is None:
-            setup = hue_setup.HueSetup()
+            if hostname:
+                setup = hue_setup.HueSetup(hostname)
+            else:
+                setup = hue_setup.HueSetup()
             url = setup.bridge_url
-            if (url is None):
+            if url is None:
                 return
             print str(url)
         else:
@@ -50,11 +53,11 @@ class SnipsHue:
         light_ids = self._get_light_ids_from_room(location)
 
         state = {"on": True}
-        if intensity != None:
+        if intensity is not None:
             intensity = int(intensity)
             intensity = int(float(intensity) * 2.54)
             state.update({"bri": intensity})
-        if color != None:
+        if color is not None:
             state.update(self._get_hue_saturation(color))
 
         self._post_state_to_ids(state, light_ids)
@@ -142,7 +145,7 @@ class SnipsHue:
         return lights
 
     def _get_all_lights(self):
-        if (self.lights_endpoint is None):
+        if self.lights_endpoint is None:
             return None
         lights = requests.get(self.lights_endpoint).json()
         return lights.keys()
@@ -181,3 +184,4 @@ if __name__ == "__main__":
     # sh.light_on_set("red", 150)
     # sh.light_on_set(None, 200)
     print sh._get_all_lights()
+

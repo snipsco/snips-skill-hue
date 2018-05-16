@@ -7,16 +7,18 @@ import sys
 cache_file_name = 'credentials.json'
 path_cache_folder = os.path.expanduser('~/.snips/philips_hue/')
 
+
 class HueSetup:
-    """ Get or create infos to connect to Philips Hue """
+    """ Get or create info to connect to Philips Hue """
 
     bridge_url = None
 
-    def __init__(self):
+    def __init__(self, bridge_ip=None):
         self.bridge_url = None
-        bridge_ip = self._get_bridge_ip()
-        if(bridge_ip is None):
-            return
+        if bridge_ip is None:
+            bridge_ip = self._get_bridge_ip()
+            if bridge_ip is None:
+                return
         username = self._get_cached_username(bridge_ip)
 
         print "Cached username: " + str(username)
@@ -44,7 +46,7 @@ class HueSetup:
             response = requests.get('http://www.meethue.com/api/nupnp').json()
         except:
             return None
-        if(response is not None and len(response)):
+        if response is not None and len(response):
             bridge_ip = response[0]["internalipaddress"] if type(response) is list else response["internalipaddress"]
         else:
             print("no bridge detected")
@@ -111,8 +113,7 @@ class HueSetup:
         content = json.dumps(content)
         f.write(content)
         f.close()
-    
-    
+
     def _connect_user(self, bridge_ip):
         created = False
 
@@ -132,8 +133,7 @@ class HueSetup:
 
         print 'User connected'
         self._say('User connected')
-        return (username)
-
+        return username
 
     def _create_url(self, bridge_ip, username):
         return 'http://{}/api/{}'.format(bridge_ip, username)
