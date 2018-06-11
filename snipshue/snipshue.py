@@ -21,7 +21,7 @@ class SnipsHue:
         :param light_ids: Philips Hue light ids
         """
         if hostname is None or username is None:
-            setup = HueSetup()
+            setup = HueSetup(hostname)
             print(setup.bridge_url)
             url = setup.bridge_url
 
