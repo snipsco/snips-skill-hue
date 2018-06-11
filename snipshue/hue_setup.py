@@ -12,8 +12,10 @@ class HueSetup:
 
     bridge_url = None
 
-    def __init__(self):
-        bridge_ip = self._get_bridge_ip()
+    def __init__(self, bridge_ip=None):
+        if bridge_ip is None:
+            bridge_ip = self._get_bridge_ip()
+
         username = self._get_cached_username(bridge_ip)
 
         print "Cached username: " + str(username)
