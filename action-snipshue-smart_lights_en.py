@@ -74,6 +74,12 @@ class Skill:
         if intent_message.slots.up_down:
             res = intent_message.slots.up_down.first().value
         return res
+    def extract_color(self, intent_message):
+        res = None
+        if intent_message.slots.color:
+            res = intent_message.slots.color.first().value
+        return res
+        pass
 
     def callback(self, hermes, intent_message):
         rooms = self.extract_house_rooms(intent_message)
@@ -84,6 +90,10 @@ class Skill:
         if intent_message.intent.intent_name == 'lightsShift':
             self.queue.put(self.lights_shift(hermes, intent_message, rooms))
         if intent_message.intent.intent_name == 'lightsSet':
+            self.queue.put(self.lights_turn_on_set(hermes, intent_message, rooms))
+        if intent_message.intent.intent_name == 'snips-labs:lightsColor_FR_':
+            self.queue.put(self.lights_turn_on_set(hermes, intent_message, rooms))
+        if intent_message.intent.intent_name == 'snips-labs:lightsColor_EN':
             self.queue.put(self.lights_turn_on_set(hermes, intent_message, rooms))
 
     def lights_turn_off(self, hermes, intent_message, rooms):
@@ -97,11 +107,12 @@ class Skill:
     def lights_turn_on_set(self, hermes, intent_message, rooms):
         hermes.publish_end_session(intent_message.session_id, None)
         number = self.extract_number(intent_message, 100)
+        color =  self.extract_color(intent_message)
         if len(rooms) > 0:
             for room in rooms:
-                self.snipshue.light_on_set(None, number, room)
+                self.snipshue.light_on_set(color, number, room)
         else:
-            self.snipshue.light_on_set(None, number, None)
+            self.snipshue.light_on_set(color, number, None)
 
     def lights_shift(self, hermes, intent_message, rooms):
         hermes.publish_end_session(intent_message.session_id, None)
