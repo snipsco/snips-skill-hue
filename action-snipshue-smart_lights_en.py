@@ -64,17 +64,15 @@ class Skill:
     def extract_number(self, intent_message, default_number):
         number = default_number
         if intent_message.slots.intensity_number:
-            print( intent_message.slots.intensity_number.first())
-            number = intent_message.slots.intensity_number.first().value.value
+            number = intent_message.slots.intensity_number.first().value
         if intent_message.slots.intensity_percent:
-            number = intent_message.slots.intensity_percent.first().value.value
+            number = intent_message.slots.intensity_percent.first().value
         return number
 
     def extract_up_down(self, intent_message):
         res = "down"
-        print(intent_message.slots.up_down.first())
         if intent_message.slots.up_down:
-            res = intent_message.slots.up_down.first().value.value
+            res = intent_message.slots.up_down.first().value
         return res
 
     def callback(self, hermes, intent_message):
@@ -109,9 +107,9 @@ class Skill:
         hermes.publish_end_session(intent_message.session_id, None)
         number = self.extract_number(intent_message, 20)
         if "down" == self.extract_up_down(intent_message):
-            self.lights_turn_down(number, room);
+            self.lights_turn_down(number, rooms);
         else:
-            self.lights_turn_up(number, room);
+            self.lights_turn_up(number, rooms);
 
     def lights_turn_down(self, number, rooms):
         if len(rooms) > 0:
