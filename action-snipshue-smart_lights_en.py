@@ -14,26 +14,38 @@ MQTT_IP_ADDR = "localhost"
 MQTT_PORT = 1883
 MQTT_ADDR = "{}:{}".format(MQTT_IP_ADDR, str(MQTT_PORT))
 
+API_KEY = "api_key"
 
 class Skill:
 
     def __init__(self):
         config = SnipsConfigParser.read_configuration_file(CONFIG_INI)
-
         hostname = None
         code = None
         if config.get('secret') is not None:
             if config.get('secret').get('hostname') is not None:
                 hostname = config.get('secret').get('hostname')
-        else:
+                if hostname == "":
+                    hostname = None
+            if config.get('secret').get(API_KEY) is not None:
+                code = config.get('secret').get(API_KEY)
+                if code == "":
+                    code = None
+        if hostname is None or code is None:
             print('No configuration')
-
         self.snipshue = SnipsHue(hostname, code)
+        hostname = self.snipshue.hostname
+        code  = self.snipshue.username
+        self.update_config(CONFIG_INI, config, hostname, code)
         self.queue = Queue.Queue()
-
         self.thread_handler = ThreadHandler()
         self.thread_handler.run(target=self.start_blocking)
         self.thread_handler.start_run_loop()
+
+    def update_config(self, filename, data, hostname, code):
+        data['secret']['hostname'] = hostname
+        data['secret'][API_KEY] = code
+        SnipsConfigParser.write_configuration_file(filename, data)
 
     def start_blocking(self, run_event):
         while run_event.is_set():
@@ -49,16 +61,18 @@ class Skill:
             for room in intent_message.slots.house_room:
                 house_rooms.append(room.slot_value.value.value)
         return house_rooms
-    def extract_number(self, intent_name, default_number):
+    def extract_number(self, intent_message, default_number):
         number = default_number
         if intent_message.slots.intensity_number:
+            print( intent_message.slots.intensity_number.first())
             number = intent_message.slots.intensity_number.first().value.value
         if intent_message.slots.intensity_percent:
             number = intent_message.slots.intensity_percent.first().value.value
         return number
 
-    def extract_up_down(self, intent_name):
+    def extract_up_down(self, intent_message):
         res = "down"
+        print(intent_message.slots.up_down.first())
         if intent_message.slots.up_down:
             res = intent_message.slots.up_down.first().value.value
         return res
@@ -69,10 +83,6 @@ class Skill:
             self.queue.put(self.lights_turn_off(hermes, intent_message, rooms))
         if intent_message.intent.intent_name == 'lightsTurnOnSet':
             self.queue.put(self.lights_turn_on_set(hermes, intent_message, rooms))
-        if intent_message.intent.intent_name == 'lightsTurnDown':
-            self.queue.put(self.lights_turn_down(hermes, intent_message, rooms))
-        if intent_message.intent.intent_name == 'lightsTurnUp':
-            self.queue.put(self.lights_turn_up(hermes, intent_message, rooms))
         if intent_message.intent.intent_name == 'lightsShift':
             self.queue.put(self.lights_shift(hermes, intent_message, rooms))
         if intent_message.intent.intent_name == 'lightsSet':

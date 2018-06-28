@@ -20,11 +20,14 @@ class SnipsHue:
         :param username: Philips Hue username
         :param light_ids: Philips Hue light ids
         """
+        self.username  = username
+        self.hostname  = hostname
         if hostname is None or username is None:
-            setup = HueSetup(hostname)
-            print(setup.bridge_url)
+            setup = HueSetup(hostname, username)
             url = setup.bridge_url
-
+            self.username  = setup.get_username()
+            self.hostname  = setup.get_bridge_ip()
+            print(setup.bridge_url)
             print str(url)
         else:
             url = 'http://{}/api/{}'.format(hostname, username)
@@ -32,7 +35,6 @@ class SnipsHue:
         self.lights_endpoint = url + "/lights"
         self.groups_endpoint = url + "/groups"
         self.config_endpoint = url + "/config"
-
         self.lights_from_room = self._get_rooms_lights()
 
     def light_on_set(self, color=None, intensity=None, location=None):

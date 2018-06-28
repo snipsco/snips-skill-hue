@@ -17,3 +17,17 @@ class SnipsConfigParser(ConfigParser.SafeConfigParser):
         except (IOError, ConfigParser.Error) as e:
             print(e)
             return dict()
+
+    @staticmethod
+    def write_configuration_file(configuration_file, data):
+        conf_parser = SnipsConfigParser()
+        for key in data.keys():
+            conf_parser.add_section(key)
+            for inner_key in data[key].keys():
+                conf_parser.set(key, inner_key, data[key][inner_key])
+        try:
+            with open(configuration_file, 'w') as f:
+                conf_parser.write(f)
+        except (IOError, ConfigParser.Error) as e:
+            print(e)
+            return False
