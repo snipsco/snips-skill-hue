@@ -49,6 +49,19 @@ class Skill:
             for room in intent_message.slots.house_room:
                 house_rooms.append(room.slot_value.value.value)
         return house_rooms
+    def extract_number(self, intent_name, default_number):
+        number = default_number
+        if intent_message.slots.intensity_number:
+            number = intent_message.slots.intensity_number.first().value.value
+        if intent_message.slots.intensity_percent:
+            number = intent_message.slots.intensity_percent.first().value.value
+        return number
+
+    def extract_up_down(self, intent_name):
+        res = "down"
+        if intent_message.slots.up_down:
+            res = intent_message.slots.up_down.first().value.value
+        return res
 
     def callback(self, hermes, intent_message):
         rooms = self.extract_house_rooms(intent_message)
@@ -60,45 +73,49 @@ class Skill:
             self.queue.put(self.lights_turn_down(hermes, intent_message, rooms))
         if intent_message.intent.intent_name == 'lightsTurnUp':
             self.queue.put(self.lights_turn_up(hermes, intent_message, rooms))
+        if intent_message.intent.intent_name == 'lightsShift':
+            self.queue.put(self.lights_shift(hermes, intent_message, rooms))
+        if intent_message.intent.intent_name == 'lightsSet':
+            self.queue.put(self.lights_turn_on_set(hermes, intent_message, rooms))
 
     def lights_turn_off(self, hermes, intent_message, rooms):
+        hermes.publish_end_session(intent_message.session_id, None)
         if len(rooms) > 0:
             for room in rooms:
                 self.snipshue.light_off(room)
         else:
             self.snipshue.light_off(None)
 
-        hermes.publish_end_session(intent_message.session_id, None)
-
-    def lights_turn_down(self, hermes, intent_message, rooms):
-        if len(rooms) > 0:
-            for room in rooms:
-                self.snipshue.light_down(20, room)
-        else:
-            self.snipshue.light_down(20, None)
-
-        hermes.publish_end_session(intent_message.session_id, None)
-
     def lights_turn_on_set(self, hermes, intent_message, rooms):
-        number = intent_message.slots.number.first().value.value if intent_message.slots.number else None
-
+        hermes.publish_end_session(intent_message.session_id, None)
+        number = self.extract_number(intent_message, 100)
         if len(rooms) > 0:
             for room in rooms:
                 self.snipshue.light_on_set(None, number, room)
         else:
             self.snipshue.light_on_set(None, number, None)
 
-            hermes.publish_end_session(intent_message.session_id, None)
+    def lights_shift(self, hermes, intent_message, rooms):
+        hermes.publish_end_session(intent_message.session_id, None)
+        number = self.extract_number(intent_message, 20)
+        if "down" == self.extract_up_down(intent_message):
+            self.lights_turn_down(number, room);
+        else:
+            self.lights_turn_up(number, room);
 
-    def lights_turn_up(self, hermes, intent_message, rooms):
+    def lights_turn_down(self, number, rooms):
         if len(rooms) > 0:
             for room in rooms:
-                self.snipshue.light_up(20, room)
+                self.snipshue.light_down(number, room)
         else:
-            self.snipshue.light_up(20, None)
+            self.snipshue.light_down(number, None)
 
-        hermes.publish_end_session(intent_message.session_id, None)
-
+    def lights_turn_up(self, number, rooms):
+        if len(rooms) > 0:
+            for room in rooms:
+                self.snipshue.light_up(number, room)
+        else:
+            self.snipshue.light_up(number, None)
 
 if __name__ == "__main__":
     Skill()
