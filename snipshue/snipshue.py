@@ -154,7 +154,8 @@ class SnipsHue:
             group = value
             if group.get("class") is not None:
                 ids_from_room[str.lower(str(group["class"]))] = [str(x) for x in group["lights"]]
-
+            if group.get("name") is not None:
+                    ids_from_room[str.lower(str(group["name"].encode('utf-8')))] = [str(x) for x in group["lights"]]
         print "[HUE] Available rooms: \n" + ("\n".join(ids_from_room.keys()))
 
         return ids_from_room
