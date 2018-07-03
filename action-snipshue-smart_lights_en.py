@@ -2,13 +2,16 @@
 # -*-: coding utf-8 -*-
 
 from hermes_python.hermes import Hermes
+from os.path import expanduser
+import  os
 from snipshue.snipshue import SnipsHue
 from snipshelpers.thread_handler import ThreadHandler
 from snipshelpers.config_parser import SnipsConfigParser
 import Queue
 
 CONFIGURATION_ENCODING_FORMAT = "utf-8"
-CONFIG_INI = "config.ini"
++CONFIG_INI =  expanduser("~/.hue/config.ini")
++CONFIG_INI_DIR =  expanduser("~/.hue/")
 
 MQTT_IP_ADDR = "localhost"
 MQTT_PORT = 1883
@@ -19,10 +22,13 @@ API_KEY = "api_key"
 class Skill:
 
     def __init__(self):
-        config = SnipsConfigParser.read_configuration_file(CONFIG_INI)
+        try:
+            config = SnipsConfigParser.read_configuration_file(CONFIG_INI)
+        except :
+            config = None
         hostname = None
         code = None
-        if config.get('secret') is not None:
+        if config and config.get('secret') is not None:
             if config.get('secret').get('hostname') is not None:
                 hostname = config.get('secret').get('hostname')
                 if hostname == "":
@@ -43,6 +49,10 @@ class Skill:
         self.thread_handler.start_run_loop()
 
     def update_config(self, filename, data, hostname, code):
+        if not os.path.exists(CONFIG_INI_DIR):
+                os.makedirs(CONFIG_INI_DIR)
+        if 'secret' not in data or data['secret'] is None:
+            data['secret'] = {}
         data['secret']['hostname'] = hostname
         data['secret'][API_KEY] = code
         SnipsConfigParser.write_configuration_file(filename, data)
