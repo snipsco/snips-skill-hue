@@ -4,11 +4,7 @@
 import requests
 import json
 import time
-import os
-import errno
-import sys
-import hue_setup
-
+from hue_setup import HueSetup
 from color_utils import colors
 
 
@@ -24,10 +20,14 @@ class SnipsHue:
         :param username: Philips Hue username
         :param light_ids: Philips Hue light ids
         """
+        self.username  = username
+        self.hostname  = hostname
         if hostname is None or username is None:
-            setup = hue_setup.HueSetup()
+            setup = HueSetup(hostname, username)
             url = setup.bridge_url
-
+            self.username  = setup.get_username()
+            self.hostname  = setup.get_bridge_ip()
+            print(setup.bridge_url)
             print str(url)
         else:
             url = 'http://{}/api/{}'.format(hostname, username)
@@ -35,7 +35,6 @@ class SnipsHue:
         self.lights_endpoint = url + "/lights"
         self.groups_endpoint = url + "/groups"
         self.config_endpoint = url + "/config"
-
         self.lights_from_room = self._get_rooms_lights()
 
     def light_on_set(self, color=None, intensity=None, location=None):
@@ -155,17 +154,8 @@ class SnipsHue:
             group = value
             if group.get("class") is not None:
                 ids_from_room[str.lower(str(group["class"]))] = [str(x) for x in group["lights"]]
-
+            if group.get("name") is not None:
+                    ids_from_room[str.lower(str(group["name"].encode('utf-8')))] = [str(x) for x in group["lights"]]
         print "[HUE] Available rooms: \n" + ("\n".join(ids_from_room.keys()))
 
         return ids_from_room
-
-
-if __name__ == "__main__":
-    sh = SnipsHue()
-    # sh.light_on_set("gold", 42, "Bedroom")
-    # sh.light_on_set("gold", 42, "Office")
-    sh.light_on_set("gold", 250, "Bedroom")
-    # sh.light_on_set("red", 150)
-    # sh.light_on_set(None, 200)
-    print sh._get_all_lights()
